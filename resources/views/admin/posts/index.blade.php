@@ -1,0 +1,80 @@
+@extends('layouts.app')
+@section('content')
+ 
+<div class="container">
+<div class="col-md-12">
+          <div class="tile">
+          	<div class="tile-footer">
+                <h1 class="tile-title">Post</h1>
+             <a href="{{ route('posts.create') }}" class="btn  btn-primary">Add</a> 
+            </div>
+            <div class="table-responsive">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>Title</th>
+                    <th>Content</th>
+                    <th>Category</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>         
+                     @foreach ($posts as $post)
+                        <tr>
+                            <td>{{ $post->id }}</td>
+                            <td>{!! $post->title !!}</td>
+                            <td>{!! $post->content !!}</td>
+                            <td>{{ $post->category }}</td>
+                            <td>{{ $post->status }}</td>
+                            <td>
+                                <a href="{{ route('posts.edit', $post->id) }}" class="btn btn-primary"  id="">Edit</a> 
+                                <a class="btn btn-danger delete-button" data-url="{{ route('delete.post', $post->id) }}">Delete</a>
+
+                            </td>
+                        </tr>
+                    @endforeach
+                         
+                </tbody>
+              </table>
+              {{  $posts->links() }}
+            </div>
+          </div>
+        </div>
+        </div>
+
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+        <script type="text/javascript">
+            $(document).ready(function() {
+                $('.delete-button').on('click', function(e) {
+                    e.preventDefault();
+                    var url = $(this).data('url');
+
+                    Swal.fire({
+                        title: 'Are you sure?',
+                        text: "You won't be able to revert this!",
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Yes, delete it!'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            // Perform the delete operation here
+                            Swal.fire(
+                                'Deleted!',
+                                'Your file has been deleted.',
+                                'success'
+                            ).then(() => {
+                                // Redirect or perform any other action after deletion
+                                window.location.href = url;
+                            });
+                        }
+                    });
+                });
+            });
+          </script>
+@endsection
